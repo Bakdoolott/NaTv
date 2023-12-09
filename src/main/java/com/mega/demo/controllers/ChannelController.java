@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/channel")
@@ -17,12 +18,17 @@ public class ChannelController {
 
     @ApiOperation("Also channel")
     @PostMapping("/create")
-    ResponseEntity<?> create(@RequestBody CreateChannelRequest request){
-        return ResponseEntity.ok(channelService.createChannel(request));
+    ResponseEntity<?> create(@ModelAttribute CreateChannelRequest data){
+        return ResponseEntity.ok(channelService.createChannel(data.getLogo(),data));
     }
 
     @PostMapping("/delete/{id}")
     ResponseEntity<?> deleteChannel(@PathVariable Long id){
         return ResponseEntity.ok(channelService.deleteChannel(id));
+    }
+
+    @GetMapping()
+    ResponseEntity<?> getAll(@RequestParam int limit,@RequestParam int pageNum){
+        return ResponseEntity.ok(channelService.getAllByPageNum(limit,pageNum));
     }
 }

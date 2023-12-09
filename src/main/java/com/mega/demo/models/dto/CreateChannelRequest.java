@@ -3,6 +3,7 @@ package com.mega.demo.models.dto;
 import com.mega.demo.models.enums.HasDiscount;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -11,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateChannelRequest {
     String name;
-    String logo;
+    MultipartFile logo;
     Integer price;
     String priority;
 }
