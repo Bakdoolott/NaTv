@@ -24,32 +24,28 @@ public class OrderChannelServiceImpl implements OrderChannelService {
     }
 
     @Override
-    public int createOrderChannel(OrderDto orderDto, List<Long> channelId, int days) {
-        List<ChannelDto> channelDto = channelService.getListById(channelId);
-        int totalPrice = 0;
+    public int createOrderChannel(OrderDto orderDto, Long channelId, int days) {
+        ChannelDto channelDto = channelService.getChannelById(channelId);
 
-        for(ChannelDto channelDto1: channelDto) {
-            double price = 0;
-            OrderChannelDto orderChannelDto = new OrderChannelDto();
-            orderChannelDto.setOrder(orderDto);
-            orderChannelDto.setChannel(channelDto1);
+        double price = 0;
+        OrderChannelDto orderChannelDto = new OrderChannelDto();
+        orderChannelDto.setOrder(orderDto);
+        orderChannelDto.setChannel(channelDto);
 
-            int lengthOfWords = orderDto.getText().replaceAll("\\s", "").length();
-            if (channelDto1.getPrice() > 0) {
-                double integer = lengthOfWords * channelDto1.getPrice();
-                Integer discountPrice = null;
-                discountPrice = channelService.getDiscountsPercent(channelDto1.getId(), days);
-                if (discountPrice != null) {
-                    price = integer / 100 * discountPrice;
-                }
-                price = integer - price;
+        int lengthOfWords = orderDto.getText().replaceAll("\\s", "").length();
+        if (channelDto.getPrice() > 0) {
+            double integer = lengthOfWords * channelDto.getPrice();
+            Integer discountPrice;
+            discountPrice = channelService.getDiscountsPercent(channelDto.getId(), days);
+            if (discountPrice != null) {
+                price = integer / 100 * discountPrice;
             }
-            orderChannelDto.setPrice((int) price);
-            totalPrice = totalPrice + (int) price;
-            save(orderChannelDto);
+            price = integer - price;
         }
+        orderChannelDto.setPrice((int) price * days);
+        save(orderChannelDto);
 
-        return totalPrice;
+        return orderChannelDto.getPrice();
     }
 
     @Override

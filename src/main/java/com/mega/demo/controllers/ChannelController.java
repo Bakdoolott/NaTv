@@ -3,11 +3,9 @@ package com.mega.demo.controllers;
 import com.mega.demo.models.dto.CreateChannelRequest;
 import com.mega.demo.services.ChannelService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/channel")
@@ -15,8 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class ChannelController {
     private final ChannelService channelService;
-
-    @ApiOperation("Also channel")
     @PostMapping("/create")
     ResponseEntity<?> create(@ModelAttribute CreateChannelRequest data){
         return ResponseEntity.ok(channelService.createChannel(data.getLogo(),data));

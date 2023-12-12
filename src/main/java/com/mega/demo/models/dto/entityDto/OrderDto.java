@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -12,8 +13,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDto {
     Long id;
-    Date startDate;
-    Date endDate;
+    List<Date> dates;
     Date addDate;
     String text;
     String phone;

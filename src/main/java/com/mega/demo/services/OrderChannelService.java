@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface OrderChannelService {
     OrderChannelDto save(OrderChannelDto orderChannelDto);
-    int createOrderChannel(OrderDto orderDto, List<Long> channelId, int days);
+    int createOrderChannel(OrderDto orderDto, Long channelId, int days);
     void deleteByOrderId(Long orderId);
 }

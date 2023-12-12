@@ -19,4 +19,6 @@ public interface ChannelService {
     List<ChannelDto> getListById(List<Long> channelIds);
 
     ChannelResponse getAllByPageNum(int limit, int pageNum);
+
+    ChannelDto getChannelById(Long channelId);
 }

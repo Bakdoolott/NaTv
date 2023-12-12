@@ -18,7 +18,6 @@ import com.mega.demo.utils.ResourceBundle;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -98,5 +97,10 @@ public class ChannelServiceImpl implements ChannelService {
                 .resultList(result.toList())
                 .totalCountOfChannels(result.getTotalElements())
                 .build();
+    }
+
+    @Override
+    public ChannelDto getChannelById(Long channelId) {
+        return findById(channelId);
     }
 }

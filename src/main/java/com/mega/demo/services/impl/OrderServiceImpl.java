@@ -6,18 +6,20 @@ import com.mega.demo.exceptions.UnknownException;
 import com.mega.demo.exceptions.WrongDateException;
 import com.mega.demo.mappers.OrderMapper;
 import com.mega.demo.models.dto.CreateOrderRequest;
+import com.mega.demo.models.dto.CreateOrderHelperRequest;
+import com.mega.demo.models.dto.OrderResponse;
 import com.mega.demo.models.dto.Response;
-import com.mega.demo.models.dto.entityDto.OrderChannelDto;
 import com.mega.demo.models.dto.entityDto.OrderDto;
 import com.mega.demo.services.OrderChannelService;
 import com.mega.demo.services.OrderService;
 import com.mega.demo.utils.ResourceBundle;
-import com.sun.source.tree.TryTree;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,31 +35,35 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Response createOrder(CreateOrderRequest request) {
-        OrderDto orderDto = new OrderDto();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        try {
-            orderDto.setStartDate(simpleDateFormat.parse(request.getStartDate()));
-            orderDto.setEndDate(simpleDateFormat.parse(request.getEndDate()));
-        } catch (ParseException e) {
-            throw new WrongDateException(ResourceBundle.periodMessages("wrongDate"));
-        }
+    public OrderResponse createOrder(CreateOrderRequest informationRequest) {
+        int totalPrice;
+        for(CreateOrderHelperRequest request: informationRequest.getChannels()) {
+            OrderDto orderDto = new OrderDto();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            int days = 0;
+            try {
+                List<Date> dates = new ArrayList<>();
+                for(String date: request.getDates()){
+                    dates.add(simpleDateFormat.parse((date)));
+                    days ++;
+                }
+                orderDto.setDates(dates);
+            } catch (ParseException e) {
+                throw new WrongDateException(ResourceBundle.periodMessages("wrongDate"));
+            }
 
-        orderDto.setText(request.getText());
-        orderDto.setPhone(request.getPhone());
-        orderDto.setEmail(request.getEmail());
-        orderDto.setFio(request.getFio());
-        orderDto = save(orderDto);
-        int days = 0;
-        try {
-            days = (int) (orderDto.getEndDate().getTime() - orderDto.getStartDate().getTime()) / 86400000;
-        }catch (Exception e){
-            throw new UnknownException(ResourceBundle.periodMessages("unknownException"));
+//            Подумать, и все пересмотреть заново (Найти ошибку) ===========================================================================================
+
+            orderDto.setText(informationRequest.getText());
+            orderDto.setPhone(informationRequest.getPhone());
+            orderDto.setEmail(informationRequest.getEmail());
+            orderDto.setFio(informationRequest.getFio());
+            orderDto = save(orderDto);
+            totalPrice = orderChannelService.createOrderChannel(orderDto, request.getChannelId(), days);
+            orderDto.setTotalPrice(orderDto.getTotalPrice() + totalPrice);
+            save(orderDto);
         }
-        int orderChannelDtosPrice = orderChannelService.createOrderChannel(orderDto, request.getChannelId(), days);
-        orderDto.setTotalPrice(orderDto.getTotalPrice() + orderChannelDtosPrice);
-        save(orderDto);
-        return new Response("Success");
+        return new OrderResponse("Success");
     }
 
     @Override

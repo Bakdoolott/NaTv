@@ -6,16 +6,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/order")
 public class OrderController {
     private final OrderService orderService;
     @PostMapping("/create")
-    ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request){
-        return ResponseEntity.ok(orderService.createOrder(request));
+    ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest informationRequest){
+        return ResponseEntity.ok(orderService.createOrder(informationRequest));
     }
 
     @PostMapping("/delete")

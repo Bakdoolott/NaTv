@@ -9,11 +9,9 @@ import java.util.List;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateOrderRequest {
-    String startDate;
-    String endDate;
     String text;
     String phone;
     String email;
     String fio;
-    List<Long> channelId;
+    List<CreateOrderHelperRequest> channels;
 }
