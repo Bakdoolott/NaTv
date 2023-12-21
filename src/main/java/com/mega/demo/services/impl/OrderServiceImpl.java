@@ -2,12 +2,10 @@ package com.mega.demo.services.impl;
 
 import com.mega.demo.dao.OrderRepository;
 import com.mega.demo.exceptions.NotDeletedException;
-import com.mega.demo.exceptions.UnknownException;
 import com.mega.demo.exceptions.WrongDateException;
 import com.mega.demo.mappers.OrderMapper;
 import com.mega.demo.models.dto.CreateOrderRequest;
 import com.mega.demo.models.dto.CreateOrderHelperRequest;
-import com.mega.demo.models.dto.OrderResponse;
 import com.mega.demo.models.dto.Response;
 import com.mega.demo.models.dto.entityDto.OrderDto;
 import com.mega.demo.services.OrderChannelService;
@@ -35,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse createOrder(CreateOrderRequest informationRequest) {
+    public Response createOrder(CreateOrderRequest informationRequest) {
         int totalPrice;
         for(CreateOrderHelperRequest request: informationRequest.getChannels()) {
             OrderDto orderDto = new OrderDto();
@@ -52,7 +50,6 @@ public class OrderServiceImpl implements OrderService {
                 throw new WrongDateException(ResourceBundle.periodMessages("wrongDate"));
             }
 
-//            Подумать, и все пересмотреть заново (Найти ошибку) ===========================================================================================
 
             orderDto.setText(informationRequest.getText());
             orderDto.setPhone(informationRequest.getPhone());
@@ -63,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
             orderDto.setTotalPrice(orderDto.getTotalPrice() + totalPrice);
             save(orderDto);
         }
-        return new OrderResponse("Success");
+        return new Response("Success");
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.mega.demo.models.dto.entityDto;
 
-import com.mega.demo.models.Channel;
-import com.mega.demo.models.Order;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
